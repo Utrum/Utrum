@@ -11,12 +11,13 @@
 #include "chainparams.h"
 
 static const std::string CLIENT_VERSION_STR = FormatVersion(CLIENT_VERSION);
+extern char ASSETCHAINS_SYMBOL[KOMODO_ASSETCHAIN_MAXLEN];
 
 void EnforceNodeDeprecation(int nHeight, bool forceLogging) {
 
     // Do not enforce deprecation in regtest or on testnet
     std::string networkID = Params().NetworkIDString();
-    if (networkID != "main") return;
+    if (networkID != "main" || ASSETCHAINS_SYMBOL[0] != 0 ) return;
 
     int blocksToDeprecation = DEPRECATION_HEIGHT - nHeight;
     bool disableDeprecation = (GetArg("-disabledeprecation", "") == CLIENT_VERSION_STR);
@@ -30,7 +31,7 @@ void EnforceNodeDeprecation(int nHeight, bool forceLogging) {
         if (blocksToDeprecation == 0 || forceLogging) {
             auto msg = strprintf(_("This version has been deprecated as of block height %d."),
                                  DEPRECATION_HEIGHT) + " " +
-                       _("You should upgrade to the latest version of Zcash.");
+                       _("You should upgrade to the latest version of Komodo.");
             if (!disableDeprecation) {
                 msg += " " + strprintf(_("To disable deprecation for this version, set %s%s."),
                                        "-disabledeprecation=", CLIENT_VERSION_STR);
@@ -47,11 +48,11 @@ void EnforceNodeDeprecation(int nHeight, bool forceLogging) {
         if (disableDeprecation) {
             msg = strprintf(_("This version will be deprecated at block height %d."),
                             DEPRECATION_HEIGHT) + " " +
-                  _("You should upgrade to the latest version of Zcash.");
+                  _("You should upgrade to the latest version of Komodo.");
         } else {
             msg = strprintf(_("This version will be deprecated at block height %d, and will automatically shut down."),
                             DEPRECATION_HEIGHT) + " " +
-                  _("You should upgrade to the latest version of Zcash.") + " " +
+                  _("You should upgrade to the latest version of Komodo.") + " " +
                   strprintf(_("To disable deprecation for this version, set %s%s."),
                             "-disabledeprecation=", CLIENT_VERSION_STR);
         }
